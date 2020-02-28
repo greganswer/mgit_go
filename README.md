@@ -1,6 +1,6 @@
 # mgit_go
 
-[mGit](https://github.com/greganswer/mgit) rewritten in Golang
+> [mGit](https://github.com/greganswer/mgit) rewritten in Golang
 
 - [Requirements](#requirements)
 - [Installation](#installation)
