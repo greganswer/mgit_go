@@ -1,5 +1,6 @@
 # mgit_go
 
+[mGit](https://github.com/greganswer/mgit) rewritten in Golang
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -9,8 +10,6 @@
 - [Contributing](#contributing)
 - [License](#license)
 - [Code of Conduct](#code-of-conduct)
-
-[mGit](https://github.com/greganswer/mgit) rewritten in Golang
 
 ## Requirements
 
