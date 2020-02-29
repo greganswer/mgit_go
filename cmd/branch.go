@@ -3,8 +3,11 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"strings"
+	"os"
 
+	"github.com/greganswer/mgit_go/git"
+	"github.com/greganswer/mgit_go/issues"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
@@ -21,11 +24,33 @@ default base branch.`,
 		if len(args) < 1 {
 			return errors.New("requires issueID argument")
 		}
+		issueID = args[0]
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("branch called with: " + strings.Join(args, " "))
-		fmt.Println("Creating branch...")
+		// Retrieve issue data.
+		fmt.Printf("Retrieving issue data for %s...\n", info(issueID))
+		issue, err := issues.FromTracker(issueID)
+		CheckIfError(err)
+		finished()
+
+		// Ask to create branch.
+		if baseBranch == "" {
+			baseBranch = git.DefaultBaseBranch()
+		}
+		branchInfo := fmt.Sprintf("%s from %s branch", info(issue.BranchName()), info(baseBranch))
+		prompt := promptui.Prompt{
+			Label:     fmt.Sprintf("Create the %s?", branchInfo),
+			IsConfirm: true,
+		}
+
+		_, err = prompt.Run()
+		if err != nil {
+			os.Exit(0)
+		}
+
+		// Create the branch.
+		fmt.Printf("Creating %s...\n", branchInfo)
 		finished()
 	},
 }

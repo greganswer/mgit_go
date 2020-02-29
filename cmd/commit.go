@@ -20,7 +20,7 @@ using the --message option.`,
 		fmt.Println("Adding all files...")
 		finished()
 
-		fmt.Println("Commiting files...")
+		fmt.Println("Committing files...")
 		finished()
 
 		fmt.Println("Pushing changes to origin...")
