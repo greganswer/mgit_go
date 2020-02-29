@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -58,6 +59,7 @@ func initConfig() {
 
 // TODO: Extract the following helper functions
 
+// CheckIfError exits and returns a standardized error message if an error occured.
 func CheckIfError(err error) {
 	if err == nil {
 		return
@@ -65,6 +67,19 @@ func CheckIfError(err error) {
 	red := color.New(color.FgRed, color.Bold).SprintFunc()
 	fmt.Println(red("FAIL:"), err)
 	os.Exit(1)
+}
+
+// ConfirmOrAbort displays a prompt and exits if the user selects no.
+func ConfirmOrAbort(message string) {
+	prompt := promptui.Prompt{
+		Label:     message,
+		IsConfirm: true,
+	}
+
+	if _, err := prompt.Run(); err != nil {
+		fmt.Println("Aborting...")
+		os.Exit(0)
+	}
 }
 
 func info(message string) string {

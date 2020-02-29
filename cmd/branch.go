@@ -3,11 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/greganswer/mgit_go/git"
 	"github.com/greganswer/mgit_go/issues"
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
@@ -38,16 +36,8 @@ default base branch.`,
 		if baseBranch == "" {
 			baseBranch = git.DefaultBaseBranch()
 		}
-		branchInfo := fmt.Sprintf("%s from %s branch", info(issue.BranchName()), info(baseBranch))
-		prompt := promptui.Prompt{
-			Label:     fmt.Sprintf("Create %s?", branchInfo),
-			IsConfirm: true,
-		}
-
-		_, err = prompt.Run()
-		if err != nil {
-			os.Exit(0)
-		}
+		branchInfo := fmt.Sprintf("%s branch from %s branch", info(issue.BranchName()), info(baseBranch))
+		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo))
 
 		// Create the branch.
 		fmt.Printf("Creating %s...\n", branchInfo)
