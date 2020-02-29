@@ -40,7 +40,7 @@ default base branch.`,
 		}
 		branchInfo := fmt.Sprintf("%s from %s branch", info(issue.BranchName()), info(baseBranch))
 		prompt := promptui.Prompt{
-			Label:     fmt.Sprintf("Create the %s?", branchInfo),
+			Label:     fmt.Sprintf("Create %s?", branchInfo),
 			IsConfirm: true,
 		}
 

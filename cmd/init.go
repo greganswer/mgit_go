@@ -11,8 +11,13 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize local repository and push to remote",
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Creating .gitignore file...")
+		finished()
+
 		fmt.Println("Initializing repo...")
 		finished()
+
+		commitAndPushAllNewChanges()
 	},
 }
 

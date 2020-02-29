@@ -62,7 +62,8 @@ func CheckIfError(err error) {
 	if err == nil {
 		return
 	}
-	fmt.Println(color.RedString("Error:"), err)
+	red := color.New(color.FgRed, color.Bold).SprintFunc()
+	fmt.Println(red("FAIL:"), err)
 	os.Exit(1)
 }
 
@@ -75,6 +76,7 @@ func success(message string) string {
 }
 
 func finished() {
-	color.Green("OK")
+	c := color.New(color.FgGreen, color.Bold)
+	c.Println("OK")
 	fmt.Println()
 }
