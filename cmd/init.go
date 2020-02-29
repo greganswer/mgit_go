@@ -10,9 +10,9 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize local repository and push to remote",
-	Long:  `Initialize local repository and push to remote`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		fmt.Println("Initializing repo...")
+		finished()
 	},
 }
 

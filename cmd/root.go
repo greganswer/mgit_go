@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -12,11 +13,12 @@ import (
 
 var cfgFile string
 
+var commitMessage, baseBranch, issueID string
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "mgit",
-	Short:   "Run Git work flows for GitHub with issue tracking ticket numbers",
-	Long:    `Run Git work flows for GitHub with issue tracking ticket numbers`,
+	Short:   "run Git work flows for GitHub with issue tracking ticket numbers",
 	Version: "0.0.1",
 }
 
@@ -31,7 +33,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mgit.yaml)")
 }
 
@@ -59,4 +60,17 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func info(message string) string {
+	return color.CyanString(message)
+}
+
+func success(message string) string {
+	return color.GreenString(message)
+}
+
+func finished() {
+	color.Green("OK")
+	fmt.Println()
 }
