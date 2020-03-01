@@ -27,7 +27,7 @@ default base branch.`,
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// Retrieve issue data.
-		fmt.Printf("Retrieving issue data for %s...\n", info(issueID))
+		fmt.Printf("Retrieving issue data from %s...\n", info(issues.URL(issueID)))
 		issue, err := issues.FromTracker(issueID)
 		FailIfError(err)
 		finished()
@@ -38,7 +38,7 @@ default base branch.`,
 			baseBranch = git.DefaultBaseBranch()
 		}
 		branchInfo := fmt.Sprintf("%s branch from %s branch", info(issue.BranchName()), info(baseBranch))
-		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo))
+		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created.")
 
 		// Create the branch.
 		fmt.Printf("Creating %s...\n", branchInfo)

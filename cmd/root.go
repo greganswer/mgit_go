@@ -71,15 +71,20 @@ func FailIfError(err error) {
 	os.Exit(1)
 }
 
-// ConfirmOrAbort displays a prompt and exits if the user selects no.
-func ConfirmOrAbort(message string) {
+// Confirm returns true if the user confirms.
+func Confirm(message string) bool {
 	prompt := promptui.Prompt{
 		Label:     message,
 		IsConfirm: true,
 	}
+	_, err := prompt.Run()
+	return err == nil
+}
 
-	if _, err := prompt.Run(); err != nil {
-		fmt.Println("Aborting...")
+// ConfirmOrAbort displays a prompt and exits if the user selects no.
+func ConfirmOrAbort(message, abortMessage string) {
+	if !Confirm(message) {
+		fmt.Println(abortMessage)
 		os.Exit(0)
 	}
 }

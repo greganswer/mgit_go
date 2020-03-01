@@ -22,15 +22,22 @@ using the --message option.`,
 		issue, err := issues.FromBranch(git.CurrentBranch())
 		FailIfError(err)
 
+		// Ask to create commit.
 		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
-		ConfirmOrAbort(fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())))
+		ConfirmOrAbort(
+			fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())),
+			"Commit not created.",
+		)
 
+		// Add all file.
 		fmt.Println("Adding all files...")
 		finished()
 
+		// Commit the changes.
 		fmt.Println("Committing files...")
 		finished()
 
+		// Push changes to remote.
 		fmt.Println("Pushing changes to origin...")
 		finished()
 	},
