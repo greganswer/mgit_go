@@ -52,14 +52,20 @@ func (i Issue) Title() string {
 	return strings.Join(words, " ")
 }
 
+// URL returns the URL for the issue.
+func (i Issue) URL() string {
+	color.Yellow("TODO: Implement issues.URL") // REMOVE ME
+	return fmt.Sprintf("https://example.com/issues/%s", i.ID)
+}
+
 // FromBranch gets issue info from the branch name.
-func FromBranch(branchName string) (*Issue, error) {
+func FromBranch(branchName string) (Issue, error) {
 	color.Yellow("TODO: Implement issues.FromBranch") // REMOVE ME
-	return &Issue{ID: "FAKE-123", title: "fake yet really long title"}, nil
+	return Issue{ID: "FAKE-123", title: "fake yet really long title"}, nil
 }
 
 // FromTracker gets issue info by making an HTTP request to the issue tracker API.
-func FromTracker(issueID string) (*Issue, error) {
+func FromTracker(issueID string) (Issue, error) {
 	color.Yellow("TODO: Implement issues.FromTracker") // REMOVE ME
-	return &Issue{ID: issueID, title: "fake yet really long title"}, nil
+	return Issue{ID: issueID, title: "fake yet really long title"}, nil
 }

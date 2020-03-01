@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	CheckIfError(rootCmd.Execute())
+	FailIfError(rootCmd.Execute())
 }
 
 func init() {
@@ -42,7 +42,7 @@ func initConfig() {
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()
-		CheckIfError(err)
+		FailIfError(err)
 
 		// Search config in home directory with name ".mgit" (without extension).
 		viper.AddConfigPath(home)
@@ -59,12 +59,13 @@ func initConfig() {
 
 // TODO: Extract the following helper functions
 
-// CheckIfError exits and returns a standardized error message if an error occured.
-func CheckIfError(err error) {
+// FailIfError exits and returns a standardized error message if an error occurred.
+func FailIfError(err error) {
 	if err == nil {
 		return
 	}
 	red := color.New(color.FgRed, color.Bold).SprintFunc()
+	fmt.Println("")
 	fmt.Println(red("FAIL:"), err)
 	os.Exit(1)
 }

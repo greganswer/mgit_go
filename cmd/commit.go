@@ -19,7 +19,20 @@ using the --message option.`,
 	Example: `    mgit commit
     mgit commit --message 'Update different from title'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		commitAndPushAllNewChanges()
+		issue, err := issues.FromBranch(git.CurrentBranch())
+		FailIfError(err)
+
+		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
+		ConfirmOrAbort(fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())))
+
+		fmt.Println("Adding all files...")
+		finished()
+
+		fmt.Println("Committing files...")
+		finished()
+
+		fmt.Println("Pushing changes to origin...")
+		finished()
 	},
 }
 
@@ -30,21 +43,4 @@ func init() {
 	rootCmd.AddCommand(commitCmd)
 	commitCmd.Flags().StringVar(&commitMessage, "message", defaultMessage, "the commit message")
 	commitCmd.Flags().StringVar(&issueID, "issueID", defaultIssueID, "the ID of the issue being worked on")
-}
-
-func commitAndPushAllNewChanges() {
-	issue, err := issues.FromBranch(git.CurrentBranch())
-	CheckIfError(err)
-
-	fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
-	ConfirmOrAbort(fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())))
-
-	fmt.Println("Adding all files...")
-	finished()
-
-	fmt.Println("Committing files...")
-	finished()
-
-	fmt.Println("Pushing changes to origin...")
-	finished()
 }

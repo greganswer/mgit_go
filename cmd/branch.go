@@ -29,7 +29,7 @@ default base branch.`,
 		// Retrieve issue data.
 		fmt.Printf("Retrieving issue data for %s...\n", info(issueID))
 		issue, err := issues.FromTracker(issueID)
-		CheckIfError(err)
+		FailIfError(err)
 		finished()
 
 		// Ask to create branch.

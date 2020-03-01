@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/greganswer/mgit_go/git"
+	"github.com/greganswer/mgit_go/issues"
 	"github.com/spf13/cobra"
 )
 
@@ -14,16 +16,27 @@ var pullRequestCmd = &cobra.Command{
 	Example: `    mgit pr
     mgit pr --base-branch develop`,
 	Run: func(cmd *cobra.Command, args []string) {
+		issue, err := issues.FromBranch(git.CurrentBranch())
+		FailIfError(err)
+
+		commitMessage := issue.String()
+		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub
+		fmt.Printf("The commit message will be \"%s\"\n", info(commitMessage))
+		ConfirmOrAbort(fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())))
+
 		fmt.Println("Adding all files...")
 		finished()
 
-		fmt.Println("Commiting files...")
+		fmt.Println("Committing files...")
+		// TODO: Use commitMessage
 		finished()
 
 		fmt.Println("Pushing changes to origin...")
 		finished()
 
+		// Create pull request
 		fmt.Println("Opening pull request...")
+		git.PullRequest(issue)
 		finished()
 	},
 }
