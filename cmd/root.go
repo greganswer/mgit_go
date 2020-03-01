@@ -14,6 +14,7 @@ import (
 
 var cfgFile string
 
+// TODO: Find a way to remove these variables.
 var commitMessage, baseBranch, issueID string
 
 // rootCmd represents the base command when called without any subcommands

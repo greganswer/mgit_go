@@ -37,10 +37,7 @@ using the --message option.`,
 }
 
 func init() {
-	defaultMessage := "Initial commit" // TODO: Update this with title from issue.
-	defaultIssueID := "JIR-123"        // TODO: Update this with ID from issue.
-
 	rootCmd.AddCommand(commitCmd)
-	commitCmd.Flags().StringVar(&commitMessage, "message", defaultMessage, "the commit message")
-	commitCmd.Flags().StringVar(&issueID, "issueID", defaultIssueID, "the ID of the issue being worked on")
+	commitCmd.Flags().StringVar(&commitMessage, "message", "", "the commit message")
+	commitCmd.Flags().StringVar(&issueID, "issueID", "", "the ID of the issue being worked on")
 }

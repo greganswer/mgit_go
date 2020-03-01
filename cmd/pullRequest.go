@@ -19,6 +19,11 @@ var pullRequestCmd = &cobra.Command{
 		issue, err := issues.FromBranch(git.CurrentBranch())
 		FailIfError(err)
 
+		// TODO: Extract method.
+		if baseBranch == "" {
+			baseBranch = git.DefaultBaseBranch()
+		}
+
 		commitMessage := issue.String()
 		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub
 		fmt.Printf("The commit message will be \"%s\"\n", info(commitMessage))
@@ -44,4 +49,5 @@ var pullRequestCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pullRequestCmd)
 	pullRequestCmd.Flags().StringVar(&baseBranch, "base-branch", "", "the base branch to perform this action on")
-}
+	pullRequestCmd.Flags().StringVar(&commitMessage, "message", "", "the commit message")
+	pullRequestCmd.Flags().StringVar(&issueID, "issueID", "", "the ID of the issue being worked on")}

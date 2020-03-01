@@ -33,6 +33,7 @@ default base branch.`,
 		finished()
 
 		// Ask to create branch.
+		// TODO: Extract method.
 		if baseBranch == "" {
 			baseBranch = git.DefaultBaseBranch()
 		}
