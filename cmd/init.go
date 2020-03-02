@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/greganswer/mgit_go/file"
 	"github.com/greganswer/mgit_go/git"
 	"github.com/greganswer/mgit_go/issues"
 	"github.com/spf13/cobra"
@@ -15,11 +16,24 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create .gitignore file.
 		fmt.Println("Creating .gitignore file...")
-		finished()
+		exists, err := file.Touch(".gitignore")
+		FailIfError(err)
+		if exists {
+			skip(".gitignore file already exists")
+		} else {
+			finished()
+		}
 
 		// Initialize a git repo.
 		fmt.Println("Initializing repo...")
-		finished()
+		exists, err = file.Exists(".git")
+		FailIfError(err)
+		if exists {
+			skip("Repo already intialized")
+		} else {
+			// TODO: Initialize repo
+			finished()
+		}
 
 		// Ask to create commit.
 		issue, err := issues.FromBranch(git.CurrentBranch())
@@ -34,6 +48,8 @@ var initCmd = &cobra.Command{
 			// Commit the changes.
 			fmt.Println("Committing files...")
 			finished()
+		} else {
+			skip("Changes not committed")
 		}
 
 		// Push changes to remote.

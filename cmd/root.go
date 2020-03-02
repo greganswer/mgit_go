@@ -89,6 +89,11 @@ func ConfirmOrAbort(message, abortMessage string) {
 	}
 }
 
+func skip(message string) {
+	fmt.Println(color.YellowString("SKIP:"), message)
+	fmt.Println("")
+}
+
 func info(message string) string {
 	return color.CyanString(message)
 }

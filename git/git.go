@@ -7,21 +7,26 @@ import (
 	"github.com/greganswer/mgit_go/issues"
 )
 
+// TODO: REMOVE ME
+func todo(message string) {
+	fmt.Println(color.YellowString("TODO:"), fmt.Sprintf("Implement git.%s", message))
+}
+
 // CurrentBranch returns the current branch for this Git repo.
 func CurrentBranch() string {
-	color.Yellow("TODO: Implement git.CurrentBranch") // REMOVE ME
+	todo("CurrentBranch")
 	return "fake-current-branch"
 }
 
 // DefaultBaseBranch returns the base branch for this Git repo.
 func DefaultBaseBranch() string {
-	color.Yellow("TODO: Implement git.DefaultBaseBranch") // REMOVE ME
+	todo("DefaultBaseBranch")
 	return "fake-default-base-branch"
 }
 
 // PullRequest uses the current branch to create a pull request on GitHub.
 func PullRequest(issue issues.Issue) {
-	color.Yellow("TODO: Implement git.PullRequest") // REMOVE ME
+	todo("PullRequest")
 	// TODO: Get assignee from Viper config
 
 	// TODO: Extract to viper config
