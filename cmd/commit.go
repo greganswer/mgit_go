@@ -26,7 +26,7 @@ using the --message option.`,
 		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
 		ConfirmOrAbort(
 			fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())),
-			"Commit not created.",
+			"Commit not created",
 		)
 
 		// Add all file.

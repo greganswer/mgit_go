@@ -38,7 +38,7 @@ default base branch.`,
 			baseBranch = git.DefaultBaseBranch()
 		}
 		branchInfo := fmt.Sprintf("%s branch from %s branch", info(issue.BranchName()), info(baseBranch))
-		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created.")
+		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created")
 
 		// Create the branch.
 		fmt.Printf("Creating %s...\n", branchInfo)

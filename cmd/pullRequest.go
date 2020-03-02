@@ -37,12 +37,16 @@ var pullRequestCmd = &cobra.Command{
 			fmt.Println("Committing files...")
 			// TODO: Use commitMessage
 			finished()
+		} else {
+			skip("Changes not committed")
 		}
 
 		// Ask to rebase changes on base branch.
 		if Confirm(fmt.Sprintf("Update the %s branch and rebase", info(baseBranch))) {
 			fmt.Printf("Rebasing off of %s...\n", baseBranch)
 			finished()
+		} else {
+			skip("No rebase off %s", info(baseBranch))
 		}
 
 		// Push changes to remote.

@@ -84,13 +84,13 @@ func Confirm(message string) bool {
 // ConfirmOrAbort displays a prompt and exits if the user selects no.
 func ConfirmOrAbort(message, abortMessage string) {
 	if !Confirm(message) {
-		fmt.Println(abortMessage)
+		skip(abortMessage)
 		os.Exit(0)
 	}
 }
 
-func skip(message string) {
-	fmt.Println(color.YellowString("SKIP:"), message)
+func skip(messages ...interface{}) {
+	fmt.Println(color.YellowString("SKIP:"), fmt.Sprintf(messages[0].(string), messages[1:]...))
 	fmt.Println("")
 }
 

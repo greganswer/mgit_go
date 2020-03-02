@@ -50,7 +50,6 @@ func PullRequest(issue issues.Issue) {
 - [] Updated CHANGELOG.md
 - [] Updated internal/external documentation`
 
-	body := fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
+	_ = fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
 
-	fmt.Println(body) // TODO: REMOVE ME
 }
