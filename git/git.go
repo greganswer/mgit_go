@@ -2,6 +2,8 @@ package git
 
 import (
 	"fmt"
+	"os/exec"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/greganswer/mgit_go/issues"
@@ -13,9 +15,9 @@ func todo(message string) {
 }
 
 // CurrentBranch returns the current branch for this Git repo.
-func CurrentBranch() string {
-	todo("CurrentBranch")
-	return "fake-current-branch"
+func CurrentBranch() (string, error) {
+	out, err := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+	return strings.Trim(string(out), "\n"), err
 }
 
 // DefaultBaseBranch returns the base branch for this Git repo.
@@ -52,4 +54,28 @@ func PullRequest(issue issues.Issue) {
 
 	_ = fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
 
+}
+
+// InitRepo initializes a Git repo.
+func InitRepo() error {
+	todo("InitRepo")
+	return nil
+}
+
+// AddAll stages all changes.
+func AddAll() error {
+	todo("AddAll")
+	return nil
+}
+
+// Commit the changes.
+func Commit(message string) error {
+	todo("Commit")
+	return nil
+}
+
+// Push updates to the remote repo.
+func Push(branchName string) error {
+	todo("Push")
+	return nil
 }

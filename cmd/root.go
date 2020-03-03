@@ -71,6 +71,12 @@ func FailIfError(err error) {
 	os.Exit(1)
 }
 
+// FailOrOK displays a failure message if there's an error otherwise displays "OK".
+func FailOrOK(err error) {
+	FailIfError(err)
+	finished()
+}
+
 // Confirm returns true if the user confirms.
 func Confirm(message string) bool {
 	prompt := promptui.Prompt{

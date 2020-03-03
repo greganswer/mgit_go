@@ -19,13 +19,16 @@ using the --message option.`,
 	Example: `    mgit commit
     mgit commit --message 'Update different from title'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		issue, err := issues.FromBranch(git.CurrentBranch())
+		// Get issue from current branch.
+		currentBranch, err := git.CurrentBranch()
+		FailIfError(err)
+		issue, err := issues.FromBranch(currentBranch)
 		FailIfError(err)
 
 		// Ask to create commit.
 		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
 		ConfirmOrAbort(
-			fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch())),
+			fmt.Sprintf("Commit all changes to %s", info(currentBranch)),
 			"Commit not created",
 		)
 

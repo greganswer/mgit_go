@@ -29,8 +29,7 @@ default base branch.`,
 		// Retrieve issue data.
 		fmt.Printf("Retrieving issue data from %s...\n", info(issues.URL(issueID)))
 		issue, err := issues.FromTracker(issueID)
-		FailIfError(err)
-		finished()
+		FailOrOK(err)
 
 		// Ask to create branch.
 		// TODO: Extract method.

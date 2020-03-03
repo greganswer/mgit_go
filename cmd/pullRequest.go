@@ -16,7 +16,10 @@ var pullRequestCmd = &cobra.Command{
 	Example: `    mgit pr
     mgit pr --base-branch develop`,
 	Run: func(cmd *cobra.Command, args []string) {
-		issue, err := issues.FromBranch(git.CurrentBranch())
+		// Get issue from current branch.
+		currentBranch, err := git.CurrentBranch()
+		FailIfError(err)
+		issue, err := issues.FromBranch(currentBranch)
 		FailIfError(err)
 
 		// TODO: Extract method.
@@ -28,7 +31,7 @@ var pullRequestCmd = &cobra.Command{
 		commitMessage := issue.String()
 		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub.
 		fmt.Printf("The commit message will be \"%s\"\n", info(commitMessage))
-		if Confirm(fmt.Sprintf("Commit all changes to %s", info(git.CurrentBranch()))) {
+		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
 			// Add all file.
 			fmt.Println("Adding all files...")
 			finished()
