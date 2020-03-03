@@ -27,22 +27,24 @@ using the --message option.`,
 
 		// Ask to create commit.
 		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
-		ConfirmOrAbort(
-			fmt.Sprintf("Commit all changes to %s", info(currentBranch)),
-			"Commit not created",
-		)
+		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
+			// Add all file.
+			fmt.Println("Adding all files...")
+			err = git.AddAll()
+			FailOrOK(err)
 
-		// Add all file.
-		fmt.Println("Adding all files...")
-		finished()
+			// Commit the changes.
+			fmt.Println("Committing files...")
+			err = git.Commit("Initial commit")
+			FailOrOK(err)
 
-		// Commit the changes.
-		fmt.Println("Committing files...")
-		finished()
-
-		// Push changes to remote.
-		fmt.Println("Pushing changes to origin...")
-		finished()
+			// Push changes to remote.
+			fmt.Printf("Pushing changes on %s branch to remote...\n", info(currentBranch))
+			err = git.Push(currentBranch)
+			FailOrOK(err)
+		} else {
+			skip("Changes not committed")
+		}
 	},
 }
 

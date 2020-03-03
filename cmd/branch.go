@@ -32,19 +32,18 @@ default base branch.`,
 		FailOrOK(err)
 		branchName := issue.BranchName()
 
-		// TODO: Get default value to work in init() below and remove these lines.
-		if baseBranch == "" {
-			baseBranch = git.DefaultBaseBranch()
-		}
-
+		// Create branch.
 		branchInfo := fmt.Sprintf("%s branch from %s branch", info(branchName), info(baseBranch))
-		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created")
-		err = git.CreateBranch(branchName)
-		FailOrOK(err)
+		if Confirm(fmt.Sprintf("Create %s", branchInfo)) {
+			err = git.CreateBranch(branchName)
+			FailOrOK(err)
+		} else {
+			skip("Branch not created")
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(branchCmd)
-	branchCmd.Flags().StringVar(&baseBranch, "base-branch", git.DefaultBaseBranch(), "the base branch to perform this action on")
+	branchCmd.Flags().StringVar(&baseBranch, "base-branch", "", "the base branch to perform this action on")
 }

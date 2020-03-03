@@ -22,11 +22,6 @@ var pullRequestCmd = &cobra.Command{
 		issue, err := issues.FromBranch(currentBranch)
 		FailIfError(err)
 
-		// TODO: Get default value to work in init() below and remove these lines.
-		if baseBranch == "" {
-			baseBranch = git.DefaultBaseBranch()
-		}
-
 		// Ask to create commit.
 		commitMessage := issue.String()
 		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub.
@@ -65,7 +60,7 @@ var pullRequestCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(pullRequestCmd)
-	pullRequestCmd.Flags().StringVar(&baseBranch, "base-branch", git.DefaultBaseBranch(), "the base branch to perform this action on")
+	pullRequestCmd.Flags().StringVar(&baseBranch, "base-branch", "", "the base branch to perform this action on")
 	pullRequestCmd.Flags().StringVar(&issueID, "issueID", "", "the ID of the issue being worked on")
 	pullRequestCmd.Flags().StringVar(&commitMessage, "message", "", "the commit message")
 }

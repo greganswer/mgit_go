@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/greganswer/mgit_go/git"
+
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -31,6 +33,7 @@ func Execute() {
 }
 
 func init() {
+	baseBranch = git.DefaultBaseBranch()
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mgit.yaml)")
 }
@@ -85,14 +88,6 @@ func Confirm(message string) bool {
 	}
 	_, err := prompt.Run()
 	return err == nil
-}
-
-// ConfirmOrAbort displays a prompt and exits if the user selects no.
-func ConfirmOrAbort(message, abortMessage string) {
-	if !Confirm(message) {
-		skip(abortMessage)
-		os.Exit(0)
-	}
 }
 
 func skip(messages ...interface{}) {
