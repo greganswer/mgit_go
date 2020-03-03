@@ -12,6 +12,26 @@ import (
 // TODO: REMOVE ME
 func todo(message string) {
 	fmt.Println(color.YellowString("TODO:"), fmt.Sprintf("Implement git.%s", message))
+	fmt.Println()
+}
+
+// AddAll stages all changes.
+func AddAll() error {
+	todo("AddAll")
+	return nil
+}
+
+// CreateBranch creates a new git branch.
+func CreateBranch(name string) error {
+	todo("CreateBranch")
+	return nil
+	// return exec.Command("git", "checkout", "-b", name).Run()
+}
+
+// Commit the changes.
+func Commit(message string) error {
+	todo("Commit")
+	return nil
 }
 
 // CurrentBranch returns the current branch for this Git repo.
@@ -20,10 +40,17 @@ func CurrentBranch() (string, error) {
 	return strings.Trim(string(out), "\n"), err
 }
 
-// DefaultBaseBranch returns the base branch for this Git repo.
+// DefaultBaseBranch returns the base branch for this Git repo. Returns empty string if error.
 func DefaultBaseBranch() string {
 	todo("DefaultBaseBranch")
+	// TODO: Return empty string if error. 
 	return "fake-default-base-branch"
+}
+
+// InitRepo initializes a Git repo.
+func InitRepo() error {
+	todo("InitRepo")
+	return nil
 }
 
 // PullRequest uses the current branch to create a pull request on GitHub.
@@ -53,25 +80,6 @@ func PullRequest(issue issues.Issue) {
 - [] Updated internal/external documentation`
 
 	_ = fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
-
-}
-
-// InitRepo initializes a Git repo.
-func InitRepo() error {
-	todo("InitRepo")
-	return nil
-}
-
-// AddAll stages all changes.
-func AddAll() error {
-	todo("AddAll")
-	return nil
-}
-
-// Commit the changes.
-func Commit(message string) error {
-	todo("Commit")
-	return nil
 }
 
 // Push updates to the remote repo.

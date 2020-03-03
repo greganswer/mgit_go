@@ -30,22 +30,21 @@ default base branch.`,
 		fmt.Printf("Retrieving issue data from %s...\n", info(issues.URL(issueID)))
 		issue, err := issues.FromTracker(issueID)
 		FailOrOK(err)
+		branchName := issue.BranchName()
 
-		// Ask to create branch.
-		// TODO: Extract method.
+		// TODO: Get default value to work in init() below and remove these lines.
 		if baseBranch == "" {
 			baseBranch = git.DefaultBaseBranch()
 		}
-		branchInfo := fmt.Sprintf("%s branch from %s branch", info(issue.BranchName()), info(baseBranch))
-		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created")
 
-		// Create the branch.
-		fmt.Printf("Creating %s...\n", branchInfo)
-		finished()
+		branchInfo := fmt.Sprintf("%s branch from %s branch", info(branchName), info(baseBranch))
+		ConfirmOrAbort(fmt.Sprintf("Create %s", branchInfo), "Branch not created")
+		err = git.CreateBranch(branchName)
+		FailOrOK(err)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(branchCmd)
-	branchCmd.Flags().StringVar(&baseBranch, "base-branch", "", "the base branch to perform this action on")
+	branchCmd.Flags().StringVar(&baseBranch, "base-branch", git.DefaultBaseBranch(), "the base branch to perform this action on")
 }
