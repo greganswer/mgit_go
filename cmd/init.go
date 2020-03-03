@@ -48,7 +48,7 @@ pushing them to the remote repo. This command does the following:
 		currentBranch, err := git.CurrentBranch()
 		FailIfError(err)
 		fmt.Printf("The commit message will be \"Initial commit\"\n")
-		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
+		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
 			// Add all file.
 			fmt.Println("Adding all files...")
 			err = git.AddAll()
@@ -60,7 +60,7 @@ pushing them to the remote repo. This command does the following:
 			FailOrOK(err)
 
 			// Push changes to remote.
-			fmt.Printf("Pushing changes on %s branch to remote...\n", info(currentBranch))
+			fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(currentBranch))
 			err = git.Push(currentBranch)
 			FailOrOK(err)
 		} else {

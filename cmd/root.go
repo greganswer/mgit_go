@@ -104,12 +104,8 @@ func skip(messages ...interface{}) {
 	fmt.Println("")
 }
 
-func info(message string) string {
+func emphasis(message string) string {
 	return color.CyanString(message)
-}
-
-func success(message string) string {
-	return color.GreenString(message)
 }
 
 func finished() {

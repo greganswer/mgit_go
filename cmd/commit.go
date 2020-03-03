@@ -30,8 +30,8 @@ using the --message option. This command does the following:
 		FailIfError(err)
 
 		// Ask to create commit.
-		fmt.Printf("The commit message will be \"%s\"\n", info(issue.String()))
-		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
+		fmt.Printf("The commit message will be \"%s\"\n", emphasis(issue.String()))
+		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
 			// Add all file.
 			fmt.Println("Adding all files...")
 			err = git.AddAll()
@@ -43,7 +43,7 @@ using the --message option. This command does the following:
 			FailOrOK(err)
 
 			// Push changes to remote.
-			fmt.Printf("Pushing changes on %s branch to remote...\n", info(currentBranch))
+			fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(currentBranch))
 			err = git.Push(currentBranch)
 			FailOrOK(err)
 		} else {
