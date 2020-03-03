@@ -43,7 +43,7 @@ func CurrentBranch() (string, error) {
 // DefaultBaseBranch returns the base branch for this Git repo. Returns empty string if error.
 func DefaultBaseBranch() string {
 	todo("DefaultBaseBranch")
-	// TODO: Return empty string if error. 
+	// TODO: Return empty string if error.
 	return "fake-default-base-branch"
 }
 
@@ -54,7 +54,7 @@ func InitRepo() error {
 }
 
 // PullRequest uses the current branch to create a pull request on GitHub.
-func PullRequest(issue issues.Issue) {
+func PullRequest(issue issues.Issue) error {
 	todo("PullRequest")
 	// TODO: Get assignee from Viper config
 
@@ -80,10 +80,17 @@ func PullRequest(issue issues.Issue) {
 - [] Updated internal/external documentation`
 
 	_ = fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
+	return nil
 }
 
 // Push updates to the remote repo.
 func Push(branchName string) error {
 	todo("Push")
+	return nil
+}
+
+// Rebase changes from baseBranch.
+func Rebase(baseBranch string) error {
+	todo("Rebase")
 	return nil
 }

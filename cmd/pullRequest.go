@@ -29,12 +29,13 @@ var pullRequestCmd = &cobra.Command{
 		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
 			// Add all file.
 			fmt.Println("Adding all files...")
-			finished()
+			err = git.AddAll()
+			FailOrOK(err)
 
 			// Commit the changes.
 			fmt.Println("Committing files...")
-			// TODO: Use commitMessage
-			finished()
+			err = git.Commit("Initial commit")
+			FailOrOK(err)
 		} else {
 			skip("Changes not committed")
 		}
@@ -42,19 +43,21 @@ var pullRequestCmd = &cobra.Command{
 		// Ask to rebase changes on base branch.
 		if Confirm(fmt.Sprintf("Update the %s branch and rebase", info(baseBranch))) {
 			fmt.Printf("Rebasing off of %s...\n", baseBranch)
-			finished()
+			err = git.Rebase(baseBranch)
+			FailOrOK(err)
 		} else {
 			skip("No rebase off %s", info(baseBranch))
 		}
 
 		// Push changes to remote.
-		fmt.Println("Pushing changes to origin...")
-		finished()
+		fmt.Printf("Pushing changes on %s branch to remote...\n", info(currentBranch))
+		err = git.Push(currentBranch)
+		FailOrOK(err)
 
 		// Create pull request.
 		fmt.Println("Opening pull request...")
-		git.PullRequest(issue)
-		finished()
+		err = git.PullRequest(issue)
+		FailOrOK(err)
 	},
 }
 
