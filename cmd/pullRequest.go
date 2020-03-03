@@ -13,8 +13,17 @@ var pullRequestCmd = &cobra.Command{
 	Use:     "pr",
 	Aliases: []string{"pull-request"},
 	Short:   "Create a GitHub Pull Request for the specified branch",
-	Example: `    mgit pr
-    mgit pr --base-branch develop`,
+	Long: `This command is idempotent and it will prompt you before commiting changes and
+pushing them to the remote repo. This command does the following:
+
+  - Asks to create a commit
+  - Add all file (if user confirmed commit)
+  - Commit the changes (if user confirmed commit)
+  - Rebase changes off base branch (if user confirms rebase)
+  - Push changes to remote 
+  - Create the pull request on GitHub
+`,
+	Example: `  mgit pr --base-branch develop`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get issue from current branch.
 		currentBranch, err := git.CurrentBranch()
@@ -40,9 +49,9 @@ var pullRequestCmd = &cobra.Command{
 			skip("Changes not committed")
 		}
 
-		// Ask to rebase changes on base branch.
+		// Rebase changes on base branch.
 		if Confirm(fmt.Sprintf("Update the %s branch and rebase", info(baseBranch))) {
-			fmt.Printf("Rebasing off of %s...\n", baseBranch)
+			fmt.Printf("Rebasing off of %s...\n", info(baseBranch))
 			err = git.Rebase(baseBranch)
 			FailOrOK(err)
 		} else {
@@ -64,6 +73,5 @@ var pullRequestCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pullRequestCmd)
 	pullRequestCmd.Flags().StringVar(&baseBranch, "base-branch", "", "the base branch to perform this action on")
-	pullRequestCmd.Flags().StringVar(&issueID, "issueID", "", "the ID of the issue being worked on")
 	pullRequestCmd.Flags().StringVar(&commitMessage, "message", "", "the commit message")
 }

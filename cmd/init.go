@@ -15,12 +15,12 @@ var initCmd = &cobra.Command{
 	Long: `This command is idempotent and it will prompt you before commiting changes and
 pushing them to the remote repo. This command does the following:
 
-    - Create .gitignore file (if not already created)
-    - Initialize a git repo (if not already intialized)
-    - Asks to create an initial commit
-    - Add all file (if commit was created)
-    - Commit the changes (if commit was created)
-    - Push changes to remote (if commit was created)
+  - Create .gitignore file (if not already created)
+  - Initialize a git repo (if not already intialized)
+  - Asks to create an initial commit
+  - Add all file (if user confirmed commit)
+  - Commit the changes (if user confirmed commit)
+  - Push changes to remote (if user confirmed commit)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create .gitignore file.
@@ -48,8 +48,7 @@ pushing them to the remote repo. This command does the following:
 		currentBranch, err := git.CurrentBranch()
 		FailIfError(err)
 		fmt.Printf("The commit message will be \"Initial commit\"\n")
-		prompt := fmt.Sprintf("Commit all changes to the \"%s\" branch", info(currentBranch))
-		if Confirm(prompt) {
+		if Confirm(fmt.Sprintf("Commit all changes to %s", info(currentBranch))) {
 			// Add all file.
 			fmt.Println("Adding all files...")
 			err = git.AddAll()

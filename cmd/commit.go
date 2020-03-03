@@ -15,9 +15,13 @@ var commitCmd = &cobra.Command{
 	Long: `
 All of the un-staged files are added, committed and pushed to GitHub.
 The commit message is extracted from the branch name if one is not supplied
-using the --message option.`,
-	Example: `    mgit commit
-    mgit commit --message 'Update different from title'`,
+using the --message option. This command does the following:
+
+  - Add all file (if commit was created)
+  - Commit the changes (if commit was created)
+  - Push changes to remote (if commit was created)
+`,
+	Example: `  mgit commit --message 'Update different from title'`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get issue from current branch.
 		currentBranch, err := git.CurrentBranch()

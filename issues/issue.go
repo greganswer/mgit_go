@@ -11,7 +11,6 @@ import (
 // TODO: REMOVE ME
 func todo(message string) {
 	fmt.Println(color.YellowString("TODO:"), fmt.Sprintf("Implement issues.%s", message))
-	fmt.Println()
 }
 
 // Issue stores the data for the current issue.

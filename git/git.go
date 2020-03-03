@@ -12,7 +12,6 @@ import (
 // TODO: REMOVE ME
 func todo(message string) {
 	fmt.Println(color.YellowString("TODO:"), fmt.Sprintf("Implement git.%s", message))
-	fmt.Println()
 }
 
 // AddAll stages all changes.

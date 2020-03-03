@@ -16,8 +16,13 @@ import (
 
 var cfgFile string
 
-// TODO: Find a way to remove these variables.
-var commitMessage, baseBranch, issueID string
+// Used for flags.
+var (
+	baseBranch    string
+	commitMessage string
+	issueID       string
+	yes           bool
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -36,6 +41,7 @@ func init() {
 	baseBranch = git.DefaultBaseBranch()
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mgit.yaml)")
+	rootCmd.PersistentFlags().BoolVarP(&yes, "yes", "y", false, "assume \"yes\" as answer to all prompts and run non-interactively")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -80,8 +86,11 @@ func FailOrOK(err error) {
 	finished()
 }
 
-// Confirm returns true if the user confirms.
+// Confirm returns true if the user confirms or if the yes flag is present.
 func Confirm(message string) bool {
+	if yes {
+		return true
+	}
 	prompt := promptui.Prompt{
 		Label:     message,
 		IsConfirm: true,

@@ -16,8 +16,8 @@ var branchCmd = &cobra.Command{
 	Long: `The new branch name is taken from the title of the issue found.
 The new branch is created off of the --base-branch or the
 default base branch.`,
-	Example: `    mgit branch JIR-123
-    mgit branch JIR-123 --base-branch develop`,
+	Example: `  mgit branch JIR-123
+  mgit branch JIR-123 --base-branch develop`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("requires issueID argument")
