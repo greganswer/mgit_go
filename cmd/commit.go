@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/greganswer/mgit_go/git"
 	"github.com/spf13/cobra"
 )
@@ -21,32 +19,30 @@ using the --message option. This command does the following:
   - Push changes to remote (if commit was created)
 `,
 	Example: `  mgit commit --message 'Update different from title'`,
-	Run: func(cmd *cobra.Command, args []string) {
-		currentBranch, err := git.CurrentBranch()
-		FailIfError(err)
-
-		if commitMessage == "" {
-			commitMessage = getCommitMessage(currentBranch)
-		}
-
-		if commitMessage != "" {
-			fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
-		}
-
-		// Ask to create commit.
-		prompt := fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))
-		if Confirm(prompt) {
-			addAllFiles()
-			commitChanges(commitMessage)
-			pushChanges(currentBranch)
-		} else {
-			skip("Changes not committed")
-		}
-	},
+	Run:     commitCmdRun,
 }
 
 func init() {
 	rootCmd.AddCommand(commitCmd)
 	commitCmd.Flags().StringVar(&commitMessage, "message", "", "the commit message")
 	commitCmd.Flags().StringVar(&issueID, "issueID", "", "the ID of the issue being worked on")
+}
+
+// commitCmdRun executes the commit command.
+func commitCmdRun(cmd *cobra.Command, args []string) {
+	currentBranch, err := git.CurrentBranch()
+	FailIfError(err)
+
+	if commitMessage == "" {
+		commitMessage = getCommitMessage(currentBranch)
+	}
+
+	// Ask to create commit.
+	if confirmCommit(commitMessage, currentBranch) {
+		addAllFiles()
+		commitChanges(commitMessage)
+		pushChanges(currentBranch)
+	} else {
+		skip("Changes not committed")
+	}
 }

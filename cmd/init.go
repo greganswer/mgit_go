@@ -22,44 +22,44 @@ pushing them to the remote repo. This command does the following:
   - Commit the changes (if user confirmed commit)
   - Push changes to remote (if user confirmed commit)
 `,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Create .gitignore file.
-		fmt.Println("Creating .gitignore file...")
-		exists, err := file.Touch(".gitignore")
-		FailIfError(err)
-		if exists {
-			skip(".gitignore file already exists")
-		} else {
-			finished()
-		}
-
-		// Initialize a git repo.
-		fmt.Println("Initializing repo...")
-		exists, err = file.Exists(".git")
-		FailIfError(err)
-		if exists {
-			skip("Repo already intialized")
-		} else {
-			FailOrOK(git.InitRepo())
-		}
-
-		currentBranch, err := git.CurrentBranch()
-		FailIfError(err)
-
-		// Ask to create commit.
-		commitMessage = "Initial commit"
-		fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
-		prompt := fmt.Sprintf("Commit all changes to %s branch", emphasis(currentBranch))
-		if Confirm(prompt) {
-			addAllFiles()
-			commitChanges(commitMessage)
-			pushChanges(currentBranch)
-		} else {
-			skip("Changes not committed")
-		}
-	},
+	Run: initCmdRun,
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+}
+
+// initCmdRun executes the init command.
+func initCmdRun(cmd *cobra.Command, args []string) {
+	// Create .gitignore file.
+	fmt.Println("Creating .gitignore file...")
+	exists, err := file.Touch(".gitignore")
+	FailIfError(err)
+	if exists {
+		skip(".gitignore file already exists")
+	} else {
+		finished()
+	}
+
+	// Initialize a git repo.
+	fmt.Println("Initializing repo...")
+	exists, err = file.Exists(".git")
+	FailIfError(err)
+	if exists {
+		skip("Repo already intialized")
+	} else {
+		FailOrOK(git.InitRepo())
+	}
+
+	currentBranch, err := git.CurrentBranch()
+	FailIfError(err)
+
+	// Ask to create commit.
+	if confirmCommit("Initial commit", currentBranch) {
+		addAllFiles()
+		commitChanges(commitMessage)
+		pushChanges(currentBranch)
+	} else {
+		skip("Changes not committed")
+	}
 }
