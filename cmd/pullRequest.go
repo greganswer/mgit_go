@@ -36,7 +36,7 @@ pushing them to the remote repo. This command does the following:
 		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub.
 		fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
 		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
-			// Add all file.
+			// Add all files.
 			fmt.Println("Adding all files...")
 			err = git.AddAll()
 			FailOrOK(err)

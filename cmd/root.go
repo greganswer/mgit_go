@@ -14,11 +14,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
 // Used for flags.
 var (
 	baseBranch    string
+	cfgFile       string
 	commitMessage string
 	issueID       string
 	yes           bool
@@ -28,7 +27,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:     "mgit",
 	Short:   "run Git work flows for GitHub with issue tracking ticket numbers",
-	Version: "0.0.1",
+	Version: "0.1.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -100,7 +99,8 @@ func Confirm(message string) bool {
 }
 
 func skip(messages ...interface{}) {
-	fmt.Println(color.YellowString("SKIP:"), fmt.Sprintf(messages[0].(string), messages[1:]...))
+	message := fmt.Sprintf(messages[0].(string), messages[1:]...)
+	fmt.Println(color.YellowString("SKIP:"), message)
 	fmt.Println("")
 }
 

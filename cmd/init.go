@@ -49,7 +49,7 @@ pushing them to the remote repo. This command does the following:
 		FailIfError(err)
 		fmt.Printf("The commit message will be \"Initial commit\"\n")
 		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
-			// Add all file.
+			// Add all files.
 			fmt.Println("Adding all files...")
 			err = git.AddAll()
 			FailOrOK(err)
