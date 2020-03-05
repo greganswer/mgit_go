@@ -32,41 +32,33 @@ pushing them to the remote repo. This command does the following:
 		FailIfError(err)
 
 		// Ask to create commit.
-		commitMessage := issue.String()
+		if commitMessage == "" {
+			commitMessage = getCommitMessage(currentBranch)
+		}
 		// TODO: append "\n\nCloses #{issue.ID}" if issue tracker is GitHub.
 		fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
-		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
-			// Add all files.
-			fmt.Println("Adding all files...")
-			err = git.AddAll()
-			FailOrOK(err)
-
-			// Commit the changes.
-			fmt.Println("Committing files...")
-			err = git.Commit("Initial commit")
-			FailOrOK(err)
+		if Confirm(fmt.Sprintf("Commit all changes to %s branch", emphasis(currentBranch))) {
+			addAllFiles()
+			commitChanges(commitMessage)
 		} else {
 			skip("Changes not committed")
 		}
 
 		// Rebase changes on base branch.
-		if Confirm(fmt.Sprintf("Update the %s branch and rebase", emphasis(baseBranch))) {
+		prompt := fmt.Sprintf("Update the %s branch and rebase", emphasis(baseBranch))
+		if Confirm(prompt) {
 			fmt.Printf("Rebasing off of %s...\n", emphasis(baseBranch))
-			err = git.Rebase(baseBranch)
-			FailOrOK(err)
+			FailOrOK(git.Rebase(baseBranch))
+			pushChanges(currentBranch)
 		} else {
 			skip("No rebase off %s", emphasis(baseBranch))
 		}
 
-		// Push changes to remote.
-		fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(currentBranch))
-		err = git.Push(currentBranch)
-		FailOrOK(err)
+		pushChanges(currentBranch)
 
 		// Create pull request.
 		fmt.Println("Opening pull request...")
-		err = git.PullRequest(issue)
-		FailOrOK(err)
+		FailOrOK(git.PullRequest(issue))
 	},
 }
 

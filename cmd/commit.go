@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/greganswer/mgit_go/git"
-	"github.com/greganswer/mgit_go/issues"
 	"github.com/spf13/cobra"
 )
 
@@ -23,29 +22,23 @@ using the --message option. This command does the following:
 `,
 	Example: `  mgit commit --message 'Update different from title'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Get issue from current branch.
 		currentBranch, err := git.CurrentBranch()
 		FailIfError(err)
-		issue, err := issues.FromBranch(currentBranch)
-		FailIfError(err)
+
+		if commitMessage == "" {
+			commitMessage = getCommitMessage(currentBranch)
+		}
+
+		if commitMessage != "" {
+			fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
+		}
 
 		// Ask to create commit.
-		fmt.Printf("The commit message will be \"%s\"\n", emphasis(issue.String()))
-		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
-			// Add all files.
-			fmt.Println("Adding all files...")
-			err = git.AddAll()
-			FailOrOK(err)
-
-			// Commit the changes.
-			fmt.Println("Committing files...")
-			err = git.Commit("Initial commit")
-			FailOrOK(err)
-
-			// Push changes to remote.
-			fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(currentBranch))
-			err = git.Push(currentBranch)
-			FailOrOK(err)
+		prompt := fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))
+		if Confirm(prompt) {
+			addAllFiles()
+			commitChanges(commitMessage)
+			pushChanges(currentBranch)
 		} else {
 			skip("Changes not committed")
 		}

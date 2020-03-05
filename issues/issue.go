@@ -3,6 +3,7 @@ package issues
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -21,7 +22,10 @@ type Issue struct {
 
 // String representation of an issue.
 func (i *Issue) String() string {
-	return fmt.Sprintf("%s: %s", i.ID, i.Title())
+	if i.ID != "" {
+		return fmt.Sprintf("%s: %s", i.ID, i.Title())
+	}
+	return i.Title()
 }
 
 // BranchName from issue ID and title.
@@ -41,7 +45,7 @@ func (i Issue) BranchName() string {
 	return strings.ToLower(branch)
 }
 
-// Title returns the titleized form of the issue title.
+// Title is the titleized form of the issue title. Uses O(n) time and space.
 // Ref: https://golangcookbook.com/chapters/strings/title/
 func (i Issue) Title() string {
 	words := strings.Fields(i.title)
@@ -57,10 +61,37 @@ func (i Issue) Title() string {
 	return strings.Join(words, " ")
 }
 
-// FromBranch gets issue info from the branch name.
+// APIURL is the URL to retrieve issue data via the issue tracker API.
+func (i Issue) APIURL() string {
+	todo("APIURL")
+	return fmt.Sprintf("https://api.example.com/issues/%s", i.ID)
+}
+
+// WebURL is the URL to retrieve issue data via the issue tracker website.
+func (i Issue) WebURL() string {
+	todo("WebURL")
+	return fmt.Sprintf("https://example.com/issues/%s", i.ID)
+}
+
+// APIURL is the URL to retrieve issue data via the issue tracker API.
+func APIURL(issueID string) string {
+	todo("APIURL")
+	return fmt.Sprintf("https://api.example.com/issues/%s", issueID)
+}
+
+// FromBranch gets issue info from the branch name. Uses O(n) time and space.
 func FromBranch(branchName string) (Issue, error) {
-	todo("FromBranch")
-	return Issue{ID: "FAKE-123", title: "fake yet really long title"}, nil
+	parts := strings.Split(branchName, "-")
+	for i, part := range parts {
+		if _, err := strconv.Atoi(part); err == nil {
+			issue := Issue{
+				ID:    strings.Join(parts[:i+1], "-"),
+				title: strings.Join(parts[i+1:], "-"),
+			}
+			return issue, nil
+		}
+	}
+	return Issue{}, &BranchHasNoIDError{branchName}
 }
 
 // FromTracker gets issue info by making an HTTP request to the issue tracker API.
@@ -69,8 +100,6 @@ func FromTracker(issueID string) (Issue, error) {
 	return Issue{ID: issueID, title: "fake yet really long title"}, nil
 }
 
-// URL returns the URL for the issue.
-func URL(issueID string) string {
-	todo("URL")
-	return fmt.Sprintf("https://example.com/issues/%s", issueID)
+func emphasis(message string) string {
+	return color.CyanString(message)
 }

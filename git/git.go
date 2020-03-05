@@ -14,10 +14,16 @@ func todo(message string) {
 	fmt.Println(color.YellowString("TODO:"), fmt.Sprintf("Implement git.%s", message))
 }
 
-// AddAll stages all changes.
+// AddAll stages all file changes.
 func AddAll() error {
 	todo("AddAll")
 	return nil
+}
+
+// BranchExists checks if the given branch exists.
+func BranchExists(name string) bool {
+	err := exec.Command("git", "rev-parse", "--quiet", "--verify", name).Run()
+	return err == nil
 }
 
 // CreateBranch creates a new git branch.
@@ -30,6 +36,11 @@ func CreateBranch(name string) error {
 // Commit the changes.
 func Commit(message string) error {
 	todo("Commit")
+	if message == "" {
+		// TODO: use the git commit prompt
+	} else {
+		// TODO: Pass the message as an option to the git CLI.
+	}
 	return nil
 }
 
@@ -39,11 +50,15 @@ func CurrentBranch() (string, error) {
 	return strings.Trim(string(out), "\n"), err
 }
 
-// DefaultBaseBranch returns the base branch for this Git repo. Returns empty string if error.
+// DefaultBaseBranch is the base branch for this Git repo. Returns empty string if none of the branches are found.
 func DefaultBaseBranch() string {
-	todo("DefaultBaseBranch")
-	// TODO: Return empty string if error.
-	return "fake-default-base-branch"
+	branches := []string{"dev", "develop", "development", "master"}
+	for _, branch := range branches {
+		if BranchExists(branch) {
+			return branch
+		}
+	}
+	return ""
 }
 
 // InitRepo initializes a Git repo.
@@ -53,7 +68,7 @@ func InitRepo() error {
 }
 
 // PullRequest uses the current branch to create a pull request on GitHub.
-func PullRequest(issue issues.Issue) error {
+func PullRequest(i issues.Issue) error {
 	todo("PullRequest")
 	// TODO: Get assignee from Viper config
 
@@ -78,7 +93,7 @@ func PullRequest(issue issues.Issue) error {
 - [] Updated CHANGELOG.md
 - [] Updated internal/external documentation`
 
-	_ = fmt.Sprintf(template, issue.Title(), issueTracker, issue.ID, issues.URL(issue.ID))
+	_ = fmt.Sprintf(template, i.Title(), issueTracker, i.ID, i.WebURL())
 	return nil
 }
 

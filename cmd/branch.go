@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/greganswer/mgit_go/git"
-	"github.com/greganswer/mgit_go/issues"
 	"github.com/spf13/cobra"
 )
 
@@ -26,17 +25,11 @@ default base branch.`,
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// Retrieve issue data.
-		fmt.Printf("Retrieving issue data from %s...\n", emphasis(issues.URL(issueID)))
-		issue, err := issues.FromTracker(issueID)
-		FailOrOK(err)
-		branchName := issue.BranchName()
+		i := getIssueFromTracker(issueID)
 
-		// Create branch.
-		branchInfo := fmt.Sprintf("%s branch from %s branch", emphasis(branchName), emphasis(baseBranch))
-		if Confirm(fmt.Sprintf("Create %s", branchInfo)) {
-			err = git.CreateBranch(branchName)
-			FailOrOK(err)
+		prompt := fmt.Sprintf("Create %s branch from %s branch", emphasis(i.BranchName()), emphasis(baseBranch))
+		if Confirm(prompt) {
+			FailOrOK(git.CreateBranch(i.BranchName()))
 		} else {
 			skip("Branch not created")
 		}

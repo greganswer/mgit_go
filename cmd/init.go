@@ -40,29 +40,20 @@ pushing them to the remote repo. This command does the following:
 		if exists {
 			skip("Repo already intialized")
 		} else {
-			err = git.InitRepo()
-			FailOrOK(err)
+			FailOrOK(git.InitRepo())
 		}
 
-		// Ask to create commit.
 		currentBranch, err := git.CurrentBranch()
 		FailIfError(err)
-		fmt.Printf("The commit message will be \"Initial commit\"\n")
-		if Confirm(fmt.Sprintf("Commit all changes to %s", emphasis(currentBranch))) {
-			// Add all files.
-			fmt.Println("Adding all files...")
-			err = git.AddAll()
-			FailOrOK(err)
 
-			// Commit the changes.
-			fmt.Println("Committing files...")
-			err = git.Commit("Initial commit")
-			FailOrOK(err)
-
-			// Push changes to remote.
-			fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(currentBranch))
-			err = git.Push(currentBranch)
-			FailOrOK(err)
+		// Ask to create commit.
+		commitMessage = "Initial commit"
+		fmt.Printf("The commit message will be \"%s\"\n", emphasis(commitMessage))
+		prompt := fmt.Sprintf("Commit all changes to %s branch", emphasis(currentBranch))
+		if Confirm(prompt) {
+			addAllFiles()
+			commitChanges(commitMessage)
+			pushChanges(currentBranch)
 		} else {
 			skip("Changes not committed")
 		}

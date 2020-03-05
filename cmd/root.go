@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/greganswer/mgit_go/git"
+	"github.com/greganswer/mgit_go/issues"
 
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
@@ -38,6 +39,7 @@ func Execute() {
 
 func init() {
 	baseBranch = git.DefaultBaseBranch()
+
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mgit.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&yes, "yes", "y", false, "assume \"yes\" as answer to all prompts and run non-interactively")
@@ -68,15 +70,18 @@ func initConfig() {
 
 // TODO: Extract the following helper functions
 
-// FailIfError exits and returns a standardized error message if an error occurred.
-func FailIfError(err error) {
-	if err == nil {
-		return
-	}
+// Fail exits the program with a standardized error message.
+func Fail(err error) {
 	red := color.New(color.FgRed, color.Bold).SprintFunc()
-	fmt.Println("")
 	fmt.Println(red("FAIL:"), err)
 	os.Exit(1)
+}
+
+// FailIfError exits the program with a standardized error message if an error occurred.
+func FailIfError(err error) {
+	if err != nil {
+		Fail(err)
+	}
 }
 
 // FailOrOK displays a failure message if there's an error otherwise displays "OK".
@@ -104,6 +109,11 @@ func skip(messages ...interface{}) {
 	fmt.Println("")
 }
 
+func warn(messages ...interface{}) {
+	message := fmt.Sprintf(messages[0].(string), messages[1:]...)
+	fmt.Println(color.YellowString("WARN:"), message)
+}
+
 func emphasis(message string) string {
 	return color.CyanString(message)
 }
@@ -112,4 +122,46 @@ func finished() {
 	c := color.New(color.FgGreen, color.Bold)
 	c.Println("OK")
 	fmt.Println()
+}
+
+// getCommitMessage get a commit message from the branch or from user input.
+func getCommitMessage(branchName string) string {
+	issue, err := issues.FromBranch(branchName)
+	switch err.(type) {
+	case *issues.BranchHasNoIDError:
+		warn(err.Error())
+	default:
+		Fail(err)
+	}
+	return issue.String()
+}
+
+func addAllFiles() {
+	fmt.Println("Adding all files...")
+	FailOrOK(git.AddAll())
+}
+
+func commitChanges(message string) {
+	fmt.Println("Committing files...")
+	FailOrOK(git.Commit(message))
+}
+
+func pushChanges(branch string) {
+	fmt.Printf("Pushing changes on %s branch to remote...\n", emphasis(branch))
+	FailOrOK(git.Push(branch))
+}
+
+func getIssueFromCurrentBranch() issues.Issue {
+	currentBranch, err := git.CurrentBranch()
+	FailIfError(err)
+	i, err := issues.FromBranch(currentBranch)
+	FailIfError(err)
+	return i
+}
+
+func getIssueFromTracker(issueID string) issues.Issue {
+	fmt.Printf("Retrieving issue data from %s...\n", emphasis(issues.APIURL(issueID)))
+	i, err := issues.FromTracker(issueID)
+	FailOrOK(err)
+	return i
 }
