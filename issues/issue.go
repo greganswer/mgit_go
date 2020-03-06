@@ -22,7 +22,7 @@ type Issue struct {
 
 // String representation of an issue.
 func (i *Issue) String() string {
-	if i.ID != "" {
+	if i.ID != "" && i.Title() != "" {
 		return fmt.Sprintf("%s: %s", i.ID, i.Title())
 	}
 	return i.Title()
