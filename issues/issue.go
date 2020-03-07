@@ -79,7 +79,7 @@ func APIURL(issueID string) string {
 	return fmt.Sprintf("https://api.example.com/issues/%s", issueID)
 }
 
-// FromBranch gets issue info from the branch name. Uses O(n) time and space.
+// FromBranch creates an issue from the branch name. Uses O(n) time and space.
 func FromBranch(branchName string) (Issue, error) {
 	parts := strings.Split(branchName, "-")
 	for i, part := range parts {
@@ -94,7 +94,7 @@ func FromBranch(branchName string) (Issue, error) {
 	return Issue{}, &BranchHasNoIDError{branchName}
 }
 
-// FromTracker gets issue info by making an HTTP request to the issue tracker API.
+// FromTracker creates an issue by making an HTTP request to the issue tracker API.
 func FromTracker(issueID string) (Issue, error) {
 	todo("FromTracker")
 	return Issue{ID: issueID, title: "fake yet really long title"}, nil
